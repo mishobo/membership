@@ -1,0 +1,114 @@
+#################################################################################
+####################### 1st Ingress Rule - rewrite ##############################
+#################################################################################
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-membership
+  namespace: backend
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+spec:
+  tls:
+    - hosts:
+        - "*.lctafrica.net"
+      secretName: lct-tls-secret
+  rules:
+    - http:
+        paths:
+          - path: /api/v1/membership/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+          - path: /api/v1/provider.*
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+          - path: /api/v1/provider/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+          - path: /api/v1/device/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+          - path: /api/v1/country/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+          - path: /api/v1/catalog/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+          - path: /api/v1/audit/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+          - path: /api/v1/card/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+  ingressClassName: nginx
+
+
+---
+
+#################################################################################
+####################### 2nd Ingress Rule - rewrite ##############################
+#################################################################################
+
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-membership-with-rewrite
+  namespace: backend
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+#    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+spec:
+  tls:
+    - hosts:
+        - "*.lctafrica.net"
+      secretName: lct-tls-secret
+  rules:
+     - http:
+        paths:
+          - path: /membership(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: membership-service
+                port:
+                  number: 8070
+  ingressClassName: nginx

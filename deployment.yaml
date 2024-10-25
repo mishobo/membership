@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: membership-deployment
+  labels:
+    app: membership-apis
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: membership-apis
+  template:
+    metadata:
+      labels:
+        app: membership-apis
+    spec:
+      containers:
+        - name: membership-apis
+          image:  europe-west3-docker.pkg.dev/lctafrica/lct-v2/membership:20232702058051
+          ports:
+            - containerPort: 8070
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: host
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: membershipDbName
+
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: username
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: membership-service
+spec:
+  selector:
+    app: membership-apis
+  ports:
+    - port: 8070
+      targetPort: 8070
+  type: ClusterIP
+

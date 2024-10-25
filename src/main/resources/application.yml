@@ -1,0 +1,68 @@
+server:
+  port: 8070
+
+spring:
+  datasource:
+    #url: jdbc:mariadb://${DB_HOST}:3306/${DB_NAME}
+    url: jdbc:mariadb://${DB_HOST}:3306/${DB_NAME}
+    driverClassName: org.mariadb.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  kafka:
+    properties:
+      schema:
+        registry:
+          url: http://localhost:8081
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+lct-africa:
+  endpoint:
+    create-benefit: "/api/v1/visit/benefit/register"
+    suspend-benefits: "/api/v1/visit/deactivateBenefits"
+  member:
+      url: "http://membership-service"
+  benefit:
+    command:
+      base-url: "http://claims-service:8088"
+    topic: "BENEFIT"
+  db:
+    user: lctv2
+    password: 9EPxu0vrbsb4Jcde
+  keycloak:
+    serverUrl: http://34.159.221.190:8090/auth/
+    keycloakRealm: LCT
+    realm: LCT
+    keycloakClient: api-services
+    clientSecret: 6sXkuDW6Sa054ebaR2kGJqxLkHuJwPbz
+
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+# Keycloak settings
+keycloak:
+  realm: LCT
+  auth-server-url: http://localhost:8080/auth
+  #  ssl-required: none
+  resource: api-services
+#  use-resource-role-mappings: true
+#  bearer-only: false
+#  cors: true
+#  principal-attribute: preferred_username

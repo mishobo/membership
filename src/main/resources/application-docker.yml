@@ -1,0 +1,38 @@
+server:
+  port: 8070
+
+spring:
+  datasource:
+    url: jdbc:mysql://${HOST:docker-mysql}:3306/${MYSQL_DATABASE_MEMBERSHIP:membership}?allowPublicKeyRetrieval=true&useSSL=False
+    driverClassName: org.mariadb.jdbc.Driver
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_ROOT_PASSWORD:123456}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  kafka:
+    properties:
+      schema:
+        registry:
+          url: http://localhost:8081
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+
+lct-africa:
+  endpoint:
+    create-benefit: "/api/v1/registerBenefit"
+  benefit:
+    command:
+      base-url: "http://${BENEFIT_SERVICE:104.198.217.192}:8086/api/v1/registerBenefit"
+    topic: "BENEFIT"
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

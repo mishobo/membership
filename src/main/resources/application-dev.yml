@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://lct-dev-db.cpjzi234btxp.eu-west-1.rds.amazonaws.com:3306/membership
+    driverClassName: org.mariadb.jdbc.Driver
+    username: admin
+    password: Lct1234#
